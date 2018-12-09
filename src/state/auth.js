@@ -1,5 +1,6 @@
 import { auth, googleProvider } from '../firebaseConfig'
- const LOG_IN = 'auth/LOG_IN'
+import {tasksListAsyncAction} from './todo'
+const LOG_IN = 'auth/LOG_IN'
 const LOG_OUT = 'auth/LOG_OUT'
 const LOGIN_CHANGE_ACTION = 'auth/LOGIN_CHANGE_ACTION'
 const PASSWORD_CHANGE_ACTION = 'auth/PASSWORD_CHANGE_ACTION'
@@ -7,7 +8,7 @@ const PASSWORD_CHANGE_ACTION = 'auth/PASSWORD_CHANGE_ACTION'
  const INITIAL_STATE = {
     email: "",
     password: "",
-    isUserLoggedIn: false,
+    isUserLoggedIn: true,
     user: null
 }
  export const initAuthChangeListeningAsyncAction = () => (dispatch, getState) => {
@@ -15,6 +16,7 @@ const PASSWORD_CHANGE_ACTION = 'auth/PASSWORD_CHANGE_ACTION'
         user => {
             if (user) {
                 dispatch(logInAction(user))
+                dispatch(tasksListAsyncAction())
             } else {
                 dispatch(logOutAction())
             }
@@ -24,7 +26,7 @@ const PASSWORD_CHANGE_ACTION = 'auth/PASSWORD_CHANGE_ACTION'
  export const logOutAsyncAction = () => (dispatch, getState) => {
     auth.signOut()
 }
- export const logInWithGoogleAsyncAction = () => (dispatch, getState) => {
+ export const logInByGoogleAsyncAction = () => (dispatch, getState) => {
     auth.signInWithPopup(googleProvider)
 }
  export const logInAsyncAction = () => (dispatch, getState) => {
