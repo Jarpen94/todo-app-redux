@@ -3,10 +3,10 @@ import thunk from 'redux-thunk'
 
 
 import auth from './state/auth'
-import todo from './state/todo'
+import toDo from './state/toDo'
 const reducer = combineReducers({
   auth,
-  todo
+  toDo
 
 })
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
