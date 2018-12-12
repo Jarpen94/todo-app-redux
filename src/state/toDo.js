@@ -1,5 +1,4 @@
 import { database } from '../firebaseConfig'
-import  {filterArray}  from '../utils'
 
 const ADD_TODO_INPUT = 'todo/ADD_TODO_INPUT'
 const RENDER_LIST = 'todo/RENDER_LIST'
@@ -10,10 +9,11 @@ const SHOW_UNCOMPLETE_TASK = 'todo/SHOW_UNCOMPLETE_TASK'
 const FILTER_INPUT = 'todo/FILTER_INPUT'
 
 const INITIAL_STATE = {
-    allToDos: null,
-    visibleToDos: null,
+    allToDos: [],
+    visibleToDos: [],
     currentFilter: '',
-    textTask: ''
+    textTask: '',
+    isCompleted: false,
 };
 
 export const addTaskAsyncAction = () => (dispatch, getState) => {
@@ -105,13 +105,21 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 allToDos: action.tasks,
-                visibleToDos: filterArray(action.tasks, state.currentFilter)
+                visibleToDos: action.tasks
             }
-            case FILTER_INPUT:
-            return{
+        case FILTER_INPUT:
+            return {
                 ...state,
-                filterToDo: action.text,
-                visibleToDos: filterArray(state.allToDos, action.text)
+                currentFilter: state.allToDos
+                    .filter(task =>
+                        task.textTask
+                            .toLowerCase()
+                            .replace(/\s/g, '')
+                            .normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+                            .includes(state.currentFilter
+                                .toLowerCase()
+                                .replace(/\s/g, '')
+                                .normalize('NFD').replace(/[\u0300-\u036f]/g, "")))
             }
         case DELETE_TASK:
             return {
@@ -121,21 +129,20 @@ export default (state = INITIAL_STATE, action) => {
         case SHOW_TASKS:
             return {
                 ...state,
-                visibleToDos: filterArray(state.allToDos, state.currentFilter)
+                visibleToDos: state.allToDos
+                    .map(task => task)
             }
         case SHOW_COMPLETE_TASK:
             return {
                 ...state,
-                visibleToDos: filterArray(state.allToDos
-                    .filter(todo => todo.completed === true),
-                    state.currentFilter)
+                visibleToDos: state.allToDos
+                    .filter(task => task.isCompleted)
             }
         case SHOW_UNCOMPLETE_TASK:
             return {
                 ...state,
-                visibleToDos: filterArray(state.allToDos
-                    .filter(todo => todo.completed === false),
-                    state.currentFilter)
+                visibleToDos: state.allToDos
+                    .filter(task => !task.isCompleted)
             }
         default:
             return state
