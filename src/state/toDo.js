@@ -110,17 +110,18 @@ export default (state = INITIAL_STATE, action) => {
         case FILTER_INPUT:
             return {
                 ...state,
-                currentFilter: state.allToDos
+                currentFilter: action.input,
+                visibleToDos: state.allToDos
                     .filter(task =>
                         task.textTask
                             .toLowerCase()
                             .replace(/\s/g, '')
                             .normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-                            .includes(state.currentFilter
+                            .includes(state.filter
                                 .toLowerCase()
                                 .replace(/\s/g, '')
                                 .normalize('NFD').replace(/[\u0300-\u036f]/g, "")))
-            }
+                    }
         case DELETE_TASK:
             return {
                 ...state,

@@ -86,7 +86,7 @@ const mapStateToProps = state => ({
     _textTask: state.toDo.textTask,
     _allToDos: state.toDo.allToDos,
     _visibleToDos: state.toDo.visibleToDos,
-    _filter: state.toDo.filter
+    _currentfilter: state.toDo.currentfilter
 
 })
 
